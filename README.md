@@ -1,20 +1,25 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# GK Services - Futuristic Car Service Center
 
-# Run and deploy your AI Studio app
+A modern, high-tech web platform designed to streamline car service center operations, featuring a sleek user interface and seamless booking workflows.
 
-This contains everything you need to run your app locally.
+## 🌟 Features
+* **Smart Booking System:** Seamlessly schedule, modify, or cancel car service appointments.
+* **Real-Time Status Tracking:** Customers can monitor their vehicle's repair status step-by-step.
+* **Admin Dashboard:** Manage mechanics, customer queues, and service records efficiently.
+* **Responsive Design:** A futuristic user interface optimized for all devices and screen sizes.
 
+## 🛠️ Tech Stack
+* **Build Tool:** Vite
+* **Language:** TypeScript
+* **Package Manager:** Bun
 
+## 🚀 Getting Started
 
-## Run Locally
+### Prerequisites
+Ensure you have [Bun](https://bun.sh/) installed on your local machine.
 
-**Prerequisites:**  Node.js
+### Installation
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/Kannan14385/gk-services---futuristic-car-service-center.git](https://github.com/Kannan14385/gk-services---futuristic-car-service-center.git)
