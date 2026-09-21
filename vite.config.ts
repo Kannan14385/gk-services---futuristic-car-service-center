@@ -5,6 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    base: '/gk-services---futuristic-car-service-center/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
