@@ -640,12 +640,13 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
     // Load High-Fidelity 3D Sports Car Model (.glb with Draco compression)
     try {
       const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath('/draco/');
+      const assetBaseUrl = import.meta.env.BASE_URL;
+      dracoLoader.setDecoderPath(`${assetBaseUrl}draco/`);
       const gltfLoader = new GLTFLoader();
       gltfLoader.setDRACOLoader(dracoLoader);
 
       gltfLoader.load(
-        '/models/sports-car.glb',
+        `${assetBaseUrl}models/sports-car.glb`,
         (gltf) => {
           const model = gltf.scene;
 
