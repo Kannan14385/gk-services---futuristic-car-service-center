@@ -1,0 +1,6 @@
+{
+  "name": "GK Services - Futuristic Car Service Center",
+  "description": "Next-generation automotive engineering and futuristic service center featuring 360° interactive car inspection, real-time diagnostic telemetry, and before/after service enhancement showcase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
