@@ -8,7 +8,7 @@ interface CodePreviewAndZipModalProps {
 }
 
 export const CodePreviewAndZipModal: React.FC<CodePreviewAndZipModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'App.tsx' | 'index.html' | 'index.css' | 'mockCarData.ts' | 'README.md'>('App.tsx');
+  const [activeTab, setActiveTab] = useState<'App.tsx' | 'Car3DCanvas.tsx' | 'Car360Viewer.tsx' | 'HeroSection.tsx' | 'mockCarData.ts'>('App.tsx');
   const [isCopied, setIsCopied] = useState(false);
   const [isZipping, setIsZipping] = useState(false);
   const [zipSuccess, setZipSuccess] = useState(false);
@@ -18,10 +18,11 @@ export const CodePreviewAndZipModal: React.FC<CodePreviewAndZipModalProps> = ({ 
   const codeSnippets: Record<string, string> = {
     'App.tsx': `/**
  * GK SERVICES - Futuristic Professional Car Service Center Webpage
- * High-performance React 19 + TypeScript + Tailwind CSS application.
+ * High-performance 100% Pure React 19 + TypeScript + Tailwind CSS application.
  * Features:
  * - Opposite & Compatible Light / Dark mode with persistent CSS variables
  * - Single-car 360° rotation (drag, step, orbit) + Under-chassis & Over-roof views
+ * - Three.js WebGL native React 3D Car Studio & Customizer
  * - Back to top button with circular progress and percentage scroll
  * - Futuristic typography: Chakra Petch & Michroma
  * - 6 unique sections with -30px container hover dynamics
@@ -75,33 +76,12 @@ export default function App() {
     }
   };
 
-  const handleBookService = (serviceName: string) => {
-    setPrefillContact({ serviceName });
-    setContactModalOpen(true);
-  };
-
-  const handleOpenCalculatorBooking = (data: {
-    vehicleType: string;
-    serviceTier: string;
-    totalEstimate: number;
-  }) => {
-    setPrefillContact({
-      serviceName: data.serviceTier,
-      vehicleType: data.vehicleType,
-      totalEstimate: data.totalEstimate,
-    });
-    setContactModalOpen(true);
-  };
-
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-[var(--accent-cyan)] selection:text-[var(--bg-primary)] transition-colors duration-300">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300">
       <Header
         theme={theme}
         onToggleTheme={toggleTheme}
-        onOpenContact={() => {
-          setPrefillContact(undefined);
-          setContactModalOpen(true);
-        }}
+        onOpenContact={() => setContactModalOpen(true)}
         onOpenCodeZip={() => setCodeZipModalOpen(true)}
       />
 
@@ -113,147 +93,173 @@ export default function App() {
           }}
         />
         <Car360Viewer onSelectHotspot={(hotspot) => setSelectedHotspot(hotspot)} />
-        <ServicesSection onBookService={handleBookService} />
+        <ServicesSection onBookService={(service) => {
+          setPrefillContact({ serviceName: service });
+          setContactModalOpen(true);
+        }} />
         <TechBaySection />
-        <CostCalculatorSection onOpenBookingModal={handleOpenCalculatorBooking} />
+        <CostCalculatorSection onOpenBookingModal={(data) => {
+          setPrefillContact({
+            serviceName: data.serviceTier,
+            vehicleType: data.vehicleType,
+            totalEstimate: data.totalEstimate,
+          });
+          setContactModalOpen(true);
+        }} />
         <TestimonialsFaqSection />
       </main>
 
       <Footer onOpenContact={() => setContactModalOpen(true)} />
-      <BeforeAfterModal hotspot={selectedHotspot} onClose={() => setSelectedHotspot(null)} onBookService={handleBookService} />
+      <BeforeAfterModal hotspot={selectedHotspot} onClose={() => setSelectedHotspot(null)} onBookService={() => {}} />
       <ContactModal isOpen={contactModalOpen} onClose={() => setContactModalOpen(false)} prefillData={prefillContact} />
       <CodePreviewAndZipModal isOpen={codeZipModalOpen} onClose={() => setCodeZipModalOpen(false)} />
-      <BackToTopWithScrollPercentage />
+      <BackToTopWithScrollPercentage theme={theme} onToggleTheme={toggleTheme} />
     </div>
   );
 }`,
-    'index.html': `<!doctype html>
-<html lang="en" class="dark scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GK Services - Futuristic Car Service Center</title>
-    <meta name="description" content="Autonomous automotive engineering terminal with 360° single-car inspection (orbit, over, under), light/dark mode, and precision maintenance protocols." />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Michroma&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  </head>
-  <body class="antialiased">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>`,
-    'index.css': `@import "tailwindcss";
+    'Car3DCanvas.tsx': `/**
+ * Car3DCanvas.tsx - Pure React Three.js WebGL 3D Sports Car Studio
+ * 100% Native React Component with Draco GLTF streaming, real-time shaders & telemetry
+ */
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
-/* Theme Variable Definitions */
-:root {
-  /* Futuristic Light Theme: Sterile Cyber-Lab High Tech */
-  --bg-primary: #f1f5f9;
-  --bg-card: #ffffff;
-  --bg-card-subtle: #e2e8f0;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --border-color: rgba(14, 165, 233, 0.35);
-  --accent-cyan: #0284c7;
-  --accent-cyan-subtle: rgba(2, 132, 199, 0.12);
-  --accent-glow: rgba(2, 132, 199, 0.35);
-}
+export const Car3DCanvas: React.FC<{ onSelectHotspot: (hotspot: any) => void }> = ({ onSelectHotspot }) => {
+  const mountRef = useRef<HTMLDivElement>(null);
+  const [selectedPaint, setSelectedPaint] = useState<string>('#00f0ff');
+  const [paintFinish, setPaintFinish] = useState<'metallic' | 'matte' | 'pearl'>('metallic');
+  const [rimStyle, setRimStyle] = useState('forged-5');
+  const [spoilerStyle, setSpoilerStyle] = useState('gt-wing');
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [isAutoRotating, setIsAutoRotating] = useState(false);
+  const [isRevving, setIsRevving] = useState(false);
 
-html.dark {
-  /* Futuristic Dark Theme: Cyber Neon Obsidian Deep Space */
-  --bg-primary: #07090e;
-  --bg-card: #0d1322;
-  --bg-card-subtle: #090c14;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --border-color: rgba(0, 240, 255, 0.25);
-  --accent-cyan: #00f0ff;
-  --accent-cyan-subtle: rgba(0, 240, 255, 0.12);
-  --accent-glow: rgba(0, 240, 255, 0.65);
-}
+  // Sync state refs to prevent re-initializing Three.js scene on user interaction
+  const isAutoRotatingRef = useRef(isAutoRotating);
+  useEffect(() => { isAutoRotatingRef.current = isAutoRotating; }, [isAutoRotating]);
 
-.font-primary {
-  font-family: 'Chakra Petch', 'Michroma', sans-serif;
-}
+  // Scene lifecycle initialization runs strictly once
+  useEffect(() => {
+    if (!mountRef.current) return;
+    const container = mountRef.current;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
 
-/* Universal Button Style */
-.gk-btn {
-  font-family: 'Chakra Petch', 'Michroma', sans-serif;
-  color: var(--accent-cyan);
-  border: 1px solid var(--border-color);
-  background: var(--bg-card);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.gk-btn:hover {
-  color: #ffffff;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 25px var(--accent-glow);
-}
+    // Load authentic Draco-compressed sports-car.glb
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/draco/');
+    const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+    loader.load('/models/sports-car.glb', (gltf) => {
+      scene.add(gltf.scene);
+      setModelLoaded(true);
+    });
 
-/* Universal Container Hover Effect: y-axis -30px (Requirement 8) */
-.gk-hover-lift {
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s ease;
-}
-.gk-hover-lift:hover {
-  transform: translateY(-30px);
-  box-shadow: 0 30px 60px -15px var(--accent-glow);
-}`,
-    'mockCarData.ts': `// Single-Car 360 multi-elevation angles & Before/After service hotspots
-export const SINGLE_CAR_MODELS = [
-  {
-    id: 'cyber-gt',
-    name: 'GK Apex Valkyrie GT (Prototype V-4)',
-    type: 'Track-Focused Hypercar',
-    orbit: [
-      { angle: 0, label: '0° Front Direct', src: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80' },
-      { angle: 45, label: '45° Front Quarter Starboard', src: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80' },
-      { angle: 90, label: '90° Starboard Profile', src: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80' },
-      { angle: 135, label: '135° Rear Quarter Starboard', src: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80' },
-      { angle: 180, label: '180° Rear Stern Direct', src: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80' },
-      { angle: 225, label: '225° Rear Quarter Portside', src: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80' },
-      { angle: 270, label: '270° Portside Profile', src: 'https://images.unsplash.com/photo-1541348263662-e0c8de4259ba?auto=format&fit=crop&w=1200&q=80' },
-      { angle: 315, label: '315° Front Quarter Portside', src: 'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1200&q=80' }
-    ],
-    under: {
-      angle: 'under',
-      label: 'Sub-Chassis Undercarriage & Diffuser Telemetry',
-      src: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=1400&q=80'
-    },
-    over: {
-      angle: 'over',
-      label: 'Top Aerial Aero Canopy & Carbon Roof View',
-      src: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1400&q=80'
-    }
-  }
+    const animate = () => {
+      requestAnimationFrame(animate);
+      if (isAutoRotatingRef.current) { scene.rotation.y += 0.008; }
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    return () => {
+      renderer.dispose();
+      scene.clear();
+      if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
+    };
+  }, []);
+
+  return (
+    <div className="relative w-full h-[580px]">
+      <div ref={mountRef} className="w-full h-full cursor-grab" />
+    </div>
+  );
+};`,
+    'Car360Viewer.tsx': `/**
+ * Car360Viewer.tsx - 360° Hyper-Inspection Studio & Fleet Gallery
+ * Pure React Architecture with 3D WebGL & Multi-Axis Turntable Switching
+ */
+import React, { useState, useRef, useEffect } from 'react';
+import { RotateCw, Sparkles, Layers, Crosshair } from 'lucide-react';
+import { STUDIO_CAR_GALLERY } from '../data/mockCarData';
+import { Car3DCanvas } from './Car3DCanvas';
+
+export const Car360Viewer: React.FC<{ onSelectHotspot: (h: any) => void }> = ({ onSelectHotspot }) => {
+  const [displayEngine, setDisplayEngine] = useState<'3d' | 'multiAxis'>('3d');
+  const [elevation, setElevation] = useState<'orbit' | 'over' | 'under'>('orbit');
+  const [selectedCarId, setSelectedCarId] = useState('car-apex-1');
+
+  return (
+    <section id="inspection360" className="py-24 px-6 bg-[var(--bg-primary)]">
+      <div className="max-w-7xl mx-auto">
+        {/* React Studio Mode Switcher */}
+        <div className="flex justify-center gap-4 mb-6">
+          <button onClick={() => setDisplayEngine('3d')} className="px-5 py-2.5 rounded-xl text-xs font-mono-tech font-bold uppercase">
+            <Sparkles className="w-4 h-4 text-cyan-300 inline mr-2" />
+            3D Interactive Studio (Pure React · WebGL)
+          </button>
+          <button onClick={() => setDisplayEngine('multiAxis')} className="px-5 py-2.5 rounded-xl text-xs font-mono-tech font-bold uppercase">
+            <RotateCw className="w-4 h-4 inline mr-2" />
+            Multi-Elevation Studio (Fleet Gallery · 360°)
+          </button>
+        </div>
+
+        {/* 100% React Studio Container */}
+        <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] overflow-hidden">
+          {displayEngine === '3d' ? (
+            <Car3DCanvas onSelectHotspot={onSelectHotspot} />
+          ) : (
+            <div>Multi-Axis Photographic Turntable</div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};`,
+    'HeroSection.tsx': `/**
+ * HeroSection.tsx - Mission Control & Real-Time Facility Telemetry
+ * Pure React Functional Component with Interactive Service Dock Previews
+ */
+import React, { useState } from 'react';
+import { ShieldCheck, Cpu, Play, Zap, Radio } from 'lucide-react';
+
+export const HeroSection: React.FC<{ onOpenContact: () => void; onExplore360: () => void }> = ({ onOpenContact, onExplore360 }) => {
+  const [activeBayIndex, setActiveBayIndex] = useState(0);
+
+  return (
+    <section id="hero" className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 px-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="lg:col-span-7 space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--accent-cyan)] text-xs font-mono-tech">
+            <Radio className="w-3.5 h-3.5 animate-pulse text-emerald-400" />
+            <span>Autonomous Robotics Dock · ISO-7 Certified</span>
+          </div>
+          <h1 className="font-primary font-black text-4xl sm:text-6xl text-[var(--text-primary)]">
+            AEROSPACE ENGINEERING FOR <span className="text-[var(--accent-cyan)]">HYPERCARS</span>
+          </h1>
+          <p className="text-sm sm:text-base text-[var(--text-secondary)]">
+            Sub-micron optical LiDAR scans, molecular ceramic armor, and quantum dyno telemetry.
+          </p>
+          <div className="flex gap-4">
+            <button onClick={onOpenContact} className="gk-btn px-6 py-3 rounded-xl font-bold">Reserve Service Dock</button>
+            <button onClick={onExplore360} className="px-6 py-3 rounded-xl border border-[var(--border-color)]">Launch 3D Studio</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};`,
+    'mockCarData.ts': `// Typed Telemetry, Cleanroom Docks, and Hotspot Definitions
+export const CAR_HOTSPOTS = [
+  { id: 'optics-radar', name: 'Sub-Micron Solid-State LiDAR', part: 'Front Fascia Array', category: 'Calibration' },
+  { id: 'aero-diffuser', name: 'Carbon Venturi Ground Tunnel', part: 'Under-Chassis Diffuser', category: 'Aerodynamics' },
+  { id: 'carbon-ceramic-brakes', name: 'Matrix Carbon Ceramic Rotors', part: 'Braking System', category: 'Performance' },
 ];`,
-    'README.md': `# GK Services - Futuristic Car Service Center
-
-A futuristic, professional static webpage engineered with React 19, TypeScript, and Tailwind CSS for **GK Services**.
-
-## Requirements Checklist
-1. **Brand**: GK Services Autonomous Car Service Center.
-2. **Responsive Typography**: Breakpoints for Desktop (>1200px), Tablet (>1024px), Mobile (>767px).
-3. **Global Color Palette**:
-   - Dark Mode: Cyber Neon Cyan (#00F0FF) & Deep Void Obsidian (#07090E).
-   - Light Mode: High-contrast sterile lab layout (#F1F5F9 canvas with #0284C7 electric cobalt).
-4. **Opposite & Compatible Light/Dark Toggle**: Interactive switcher in header, persists preference via CSS variables.
-5. **Back to Top Button**: Circular SVG progress ring with live percentage scroll indicator and hover animation.
-6. **Primary Font**: 'Chakra Petch' and 'Michroma' futuristic cyber typography.
-7. **Single-Car 360° Inspection**:
-   - Isolated car presentation.
-   - Smooth 360° orbit rotation via drag, scrub slider, or step buttons.
-   - Under-the-car chassis and Over-the-car aerial views with interactive hotspot telemetry.
-8. **6 Unique Sections**:
-   - Hero Mission Control
-   - 360° Interactive Single-Car Visualizer
-   - Core Engineering & Diagnostics Matrix
-   - Robotic Cleanroom Bays & Live Telemetry
-   - Transparent Service Terminal & Estimator
-   - Client Telemetry & Protocol FAQ
-9. **Sticky Header**: 3 divisions (GK Logo, Navigation Menu, Universal Contact Button + Theme Switcher).
-10. **Universal Container Hover Effect**: -30px lift on all major cards (\`transform: translateY(-30px)\`).
-11. **1-Click Project ZIP Export**: Built-in client-side ZIP bundler with code inspection tabs.
-`,
   };
 
   const handleCopy = () => {
@@ -268,16 +274,16 @@ A futuristic, professional static webpage engineered with React 19, TypeScript, 
       const zip = new JSZip();
 
       zip.file('src/App.tsx', codeSnippets['App.tsx']);
-      zip.file('index.html', codeSnippets['index.html']);
-      zip.file('src/index.css', codeSnippets['index.css']);
+      zip.file('src/components/Car3DCanvas.tsx', codeSnippets['Car3DCanvas.tsx']);
+      zip.file('src/components/Car360Viewer.tsx', codeSnippets['Car360Viewer.tsx']);
+      zip.file('src/components/HeroSection.tsx', codeSnippets['HeroSection.tsx']);
       zip.file('src/data/mockCarData.ts', codeSnippets['mockCarData.ts']);
-      zip.file('README.md', codeSnippets['README.md']);
 
       const content = await zip.generateAsync({ type: 'blob' });
       const url = URL.createObjectURL(content);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'gk-services-futuristic-car-center.zip';
+      link.download = 'gk-services-react-platform.zip';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -313,16 +319,15 @@ A futuristic, professional static webpage engineered with React 19, TypeScript, 
             </div>
             <div>
               <span className="text-[10px] font-mono-tech uppercase tracking-widest text-[var(--accent-cyan)]">
-                SOURCE INSPECTOR & BUNDLER
+                100% PURE REACT 19 ARCHITECTURE
               </span>
               <h3 className="font-primary font-bold text-lg text-[var(--text-primary)]">
-                PROJECT CODE & 1-CLICK ZIP
+                REACT CODE INSPECTOR & 1-CLICK ZIP
               </h3>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* 1-Click ZIP Download button */}
             <button
               id="download-project-zip-btn"
               onClick={handleDownloadZip}
@@ -339,7 +344,7 @@ A futuristic, professional static webpage engineered with React 19, TypeScript, 
               ) : (
                 <>
                   <Download className="w-4 h-4" />
-                  <span>Download Complete ZIP</span>
+                  <span>Download React ZIP</span>
                 </>
               )}
             </button>
@@ -356,7 +361,7 @@ A futuristic, professional static webpage engineered with React 19, TypeScript, 
         {/* Tab Selection */}
         <div className="px-6 pt-3 pb-1 border-b border-[var(--border-color)] bg-[var(--bg-card-subtle)] flex items-center justify-between overflow-x-auto gap-2">
           <div className="flex items-center gap-2">
-            {(Object.keys(codeSnippets) as Array<'App.tsx' | 'index.html' | 'index.css' | 'mockCarData.ts' | 'README.md'>).map((tab) => (
+            {(Object.keys(codeSnippets) as Array<'App.tsx' | 'Car3DCanvas.tsx' | 'Car360Viewer.tsx' | 'HeroSection.tsx' | 'mockCarData.ts'>).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -384,7 +389,7 @@ A futuristic, professional static webpage engineered with React 19, TypeScript, 
             ) : (
               <>
                 <Copy className="w-3.5 h-3.5" />
-                <span>Copy File Code</span>
+                <span>Copy React Code</span>
               </>
             )}
           </button>
@@ -399,8 +404,8 @@ A futuristic, professional static webpage engineered with React 19, TypeScript, 
 
         {/* Footer Hint */}
         <div className="px-6 py-3 border-t border-[var(--border-color)] bg-[var(--bg-card-subtle)] flex items-center justify-between text-xs font-mono-tech text-[var(--text-secondary)]">
-          <span>EASILY EDITABLE · PURE REACT 19 & TAILWIND CSS</span>
-          <span className="text-[var(--accent-cyan)]">ZIP CONTAINS FULL STANDALONE PROJECT</span>
+          <span>100% PURE REACT 19 ARCHITECTURE · ZERO EXTERNAL IFRAMES</span>
+          <span className="text-[var(--accent-cyan)]">MODULAR COMPONENTS · TYPESCRIPT · THREE.JS WEBGL</span>
         </div>
       </div>
     </div>

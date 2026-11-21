@@ -194,42 +194,40 @@ export const Car360Viewer: React.FC<Car360ViewerProps> = ({ onSelectHotspot }) =
         </div>
 
         {/* Primary Engine Switcher: 100% Native React Base (3D Interactive Studio & Multi-Elevation Studio) */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="inline-flex p-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-lg backdrop-blur-md">
-            {/* Option 1: 3D Interactive Studio & Customizer (Pure React + Three.js WebGL) */}
-            <button
-              id="engine-3d-btn"
-              onClick={() => setDisplayEngine('3d')}
-              className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-mono-tech font-bold uppercase transition-all flex items-center gap-2 cursor-pointer ${
-                displayEngine === '3d'
-                  ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_20px_var(--accent-glow)]'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
-              <span>3D Interactive Studio</span>
-              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] bg-black/20 text-cyan-200 font-normal">
-                Pure React
-              </span>
-            </button>
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-6">
+          {/* Option 1: 3D Interactive Studio & Customizer (Pure React + Three.js WebGL) */}
+          <button
+            id="engine-3d-btn"
+            onClick={() => setDisplayEngine('3d')}
+            className={`px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono-tech font-bold uppercase transition-all flex items-center gap-2.5 cursor-pointer ${
+              displayEngine === '3d'
+                ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_30px_var(--accent-glow)] scale-105'
+                : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--accent-cyan)] hover:border-[var(--accent-cyan)]'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
+            <span>3D Interactive Studio</span>
+            <span className="px-2 py-0.5 rounded text-[10px] bg-cyan-500/20 text-cyan-200 border border-cyan-500/30">
+              Pure React · WebGL
+            </span>
+          </button>
 
-            {/* Option 2: Multi-Elevation Fleet Studio (Pure React 360° Turntable) */}
-            <button
-              id="engine-multiaxis-btn"
-              onClick={() => setDisplayEngine('multiAxis')}
-              className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-mono-tech font-bold uppercase transition-all flex items-center gap-2 cursor-pointer ${
-                displayEngine === 'multiAxis'
-                  ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_20px_var(--accent-glow)]'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              <RotateCw className="w-3.5 h-3.5" />
-              <span>Multi-Elevation Studio</span>
-              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] bg-black/20 text-cyan-200 font-normal">
-                Fleet 360°
-              </span>
-            </button>
-          </div>
+          {/* Option 2: Multi-Elevation Fleet Studio (Pure React 360° Turntable) */}
+          <button
+            id="engine-multiaxis-btn"
+            onClick={() => setDisplayEngine('multiAxis')}
+            className={`px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono-tech font-bold uppercase transition-all flex items-center gap-2.5 cursor-pointer ${
+              displayEngine === 'multiAxis'
+                ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_30px_var(--accent-glow)] scale-105'
+                : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--accent-cyan)] hover:border-[var(--accent-cyan)]'
+            }`}
+          >
+            <RotateCw className="w-4 h-4" />
+            <span>Multi-Elevation Studio</span>
+            <span className="px-2 py-0.5 rounded text-[10px] bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/30">
+              Fleet Gallery · 360°
+            </span>
+          </button>
         </div>
 
         {/* If Multi-Elevation Studio is active, display the Car Fleet Gallery Bar & View Controls */}

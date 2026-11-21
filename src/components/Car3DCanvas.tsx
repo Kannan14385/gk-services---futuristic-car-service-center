@@ -99,7 +99,7 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
   const [rimColor, setRimColor] = useState<string>('#f1f5f9');
   const [tireType, setTireType] = useState<TireType>('neonglow');
   const [caliperColor, setCaliperColor] = useState<string>('#00f0ff');
-  const [spoilerStyle, setSpoilerStyle] = useState<SpoilerStyle>('wingless');
+  const [spoilerStyle, setSpoilerStyle] = useState<SpoilerStyle>('gt-wing');
   const [underglowColor, setUnderglowColor] = useState<string>('#00f0ff');
   const [headlightsOn, setHeadlightsOn] = useState<boolean>(true);
 
@@ -162,19 +162,19 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
   const spinSpeedRef = useRef<number>(0);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Orbit state - default front 3/4 beauty angle
+  // Orbit state
   const orbitState = useRef({
     isDragging: false,
     prevMouseX: 0,
     prevMouseY: 0,
-    theta: (215 * Math.PI) / 180,
-    phi: (70 * Math.PI) / 180,
-    radius: 7.2,
-    target: new THREE.Vector3(0, 0.35, 0),
+    theta: Math.PI / 4,
+    phi: Math.PI / 3,
+    radius: 7.5,
+    target: new THREE.Vector3(0, 0.4, 0),
     damping: 0.08,
-    targetTheta: (215 * Math.PI) / 180,
-    targetPhi: (70 * Math.PI) / 180,
-    targetRadius: 7.2,
+    targetTheta: Math.PI / 4,
+    targetPhi: Math.PI / 3,
+    targetRadius: 7.5,
   });
 
   // Hotspots mapped to 3D space
@@ -976,44 +976,44 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
     });
 
     if (spoilerStyle === 'gt-wing') {
-      const wingGeo = new THREE.BoxGeometry(1.85, 0.035, 0.32);
+      const wingGeo = new THREE.BoxGeometry(2.15, 0.04, 0.44);
       const wing = new THREE.Mesh(wingGeo, carbonMat);
-      wing.position.set(0, 0.95, -1.68);
-      wing.rotation.x = -0.06;
+      wing.position.set(0, 1.18, -2.15);
+      wing.rotation.x = -0.08;
       spoilerGroup.add(wing);
 
-      [-0.92, 0.92].forEach((xPos) => {
-        const endplateGeo = new THREE.BoxGeometry(0.03, 0.18, 0.38);
+      [-1.08, 1.08].forEach((xPos) => {
+        const endplateGeo = new THREE.BoxGeometry(0.04, 0.24, 0.5);
         const endplate = new THREE.Mesh(endplateGeo, carbonMat);
-        endplate.position.set(xPos, 0.95, -1.68);
+        endplate.position.set(xPos, 1.18, -2.15);
         spoilerGroup.add(endplate);
       });
 
-      [-0.42, 0.42].forEach((xPos) => {
-        const pylonGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.35, 8);
+      [-0.48, 0.48].forEach((xPos) => {
+        const pylonGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.65, 8);
         const pylon = new THREE.Mesh(pylonGeo, carbonMat);
-        pylon.position.set(xPos, 0.78, -1.65);
-        pylon.rotation.x = 0.15;
+        pylon.position.set(xPos, 0.85, -2.05);
+        pylon.rotation.x = 0.22;
         spoilerGroup.add(pylon);
       });
     } else if (spoilerStyle === 'ducktail') {
-      const lipGeo = new THREE.BoxGeometry(1.55, 0.12, 0.18);
+      const lipGeo = new THREE.BoxGeometry(1.85, 0.18, 0.25);
       const lip = new THREE.Mesh(lipGeo, carbonMat);
-      lip.position.set(0, 0.72, -1.72);
-      lip.rotation.x = -0.32;
+      lip.position.set(0, 0.68, -2.12);
+      lip.rotation.x = -0.42;
       spoilerGroup.add(lip);
     } else if (spoilerStyle === 'active-twin') {
-      [-0.48, 0.48].forEach((xPos) => {
-        const flapGeo = new THREE.BoxGeometry(0.72, 0.035, 0.28);
+      [-0.55, 0.55].forEach((xPos) => {
+        const flapGeo = new THREE.BoxGeometry(0.85, 0.04, 0.38);
         const flap = new THREE.Mesh(flapGeo, carbonMat);
-        flap.position.set(xPos, 0.88, -1.68);
-        flap.rotation.x = -0.22;
-        flap.rotation.z = xPos > 0 ? -0.05 : 0.05;
+        flap.position.set(xPos, 0.95, -2.1);
+        flap.rotation.x = -0.28;
+        flap.rotation.z = xPos > 0 ? -0.06 : 0.06;
         spoilerGroup.add(flap);
 
-        const strutGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.28, 8);
+        const strutGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.42, 8);
         const strut = new THREE.Mesh(strutGeo, carbonMat);
-        strut.position.set(xPos, 0.75, -1.65);
+        strut.position.set(xPos, 0.75, -2.05);
         spoilerGroup.add(strut);
       });
     }
@@ -1429,7 +1429,7 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
       <div
         ref={mountRef}
         id="webgl-car-canvas-mount"
-        className="relative w-full h-[390px] sm:h-[460px] md:h-[510px] cursor-grab active:cursor-grabbing select-none"
+        className="relative w-full h-[450px] sm:h-[520px] md:h-[580px] cursor-grab active:cursor-grabbing select-none"
       >
         {/* Floating 3D Interactive Hotspot Markers */}
         {showHotspots &&
