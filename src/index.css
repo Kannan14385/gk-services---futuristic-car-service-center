@@ -26,6 +26,13 @@
     --accent-cyan-light: #ab8660;
     --accent-glow: rgba(138, 106, 74, 0.35);
     --grid-line: rgba(37, 38, 66, 0.05);
+
+    /* UI/UX Pro Max Dimensional Elevation Tokens */
+    --elevation-1: 0 1px 3px rgba(37, 38, 66, 0.08);
+    --elevation-2: 0 4px 6px rgba(37, 38, 66, 0.12);
+    --elevation-3: 0 10px 20px rgba(37, 38, 66, 0.16);
+    --elevation-4: 0 20px 40px rgba(37, 38, 66, 0.22);
+    --blur-amount: 12px;
   }
 
   html.dark {
@@ -53,6 +60,13 @@
     --accent-cyan-light: #e46868;
     --accent-glow: rgba(215, 81, 81, 0.45);
     --grid-line: rgba(215, 81, 81, 0.05);
+
+    /* UI/UX Pro Max Dimensional Elevation Tokens (Dark Mode) */
+    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.35);
+    --elevation-2: 0 4px 8px rgba(0, 0, 0, 0.45);
+    --elevation-3: 0 10px 24px rgba(0, 0, 0, 0.55);
+    --elevation-4: 0 20px 45px rgba(0, 0, 0, 0.7);
+    --blur-amount: 14px;
   }
 
   body {
@@ -109,6 +123,13 @@
 }
 .font-mono-tech {
   font-family: var(--font-mono);
+}
+.font-syncopate {
+  font-family: 'Syncopate', var(--font-primary), sans-serif;
+  letter-spacing: 0.08em;
+}
+.font-space-mono {
+  font-family: 'Space Mono', var(--font-mono), monospace;
 }
 
 /* Universal Button Style & Universal Hover Effect (Requirement 5) */
@@ -241,4 +262,28 @@ html.dark .gk-btn:hover {
 
 .animate-fadeIn {
   animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* UI/UX Pro Max Accessibility & Interaction Polish */
+*:focus-visible {
+  outline: 2px solid var(--accent-cyan) !important;
+  outline-offset: 2px !important;
+}
+
+/* Minimum 44px Touch Targets for Mobile Access */
+.touch-target-min {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Reduced Motion Safety */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
