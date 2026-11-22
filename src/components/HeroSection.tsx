@@ -100,12 +100,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onExplo
                 <span className="w-1.5 h-1.5 bg-[var(--accent-cyan)] rounded-full animate-ping" />
                 [ 01 // AEROSPACE-GRADE AUTOMOTIVE SURGERY ]
               </span>
-              <h1 className="gk-font-display font-syncopate font-black tracking-[0.12em] text-[var(--text-primary)] uppercase leading-[1.05]">
-                NEXT-GEN <br />
+              <h1 className="gk-font-display font-syncopate font-black tracking-[0.08em] text-[var(--text-primary)] uppercase leading-[1.05]">
+                ROBOTIC SURGERY & <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] via-teal-200 to-[var(--accent-crimson)] drop-shadow-[0_0_40px_var(--accent-glow)]">
-                  PRECISION
+                  QUANTUM
                 </span>{' '}
-                CAR SERVICE
+                CALIBRATION
               </h1>
             </div>
 

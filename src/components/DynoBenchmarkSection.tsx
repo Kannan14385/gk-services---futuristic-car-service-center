@@ -285,21 +285,19 @@ export const DynoBenchmarkSection: React.FC<DynoBenchmarkSectionProps> = ({ onBo
                   {/* Dynamic Power Curves Calculated based on stage multipliers */}
                   {(() => {
                     const mult = stageData.hp / 1280;
-                    const hpY1 = 175 - 40 * mult;
-                    const hpY2 = 145 - 65 * mult;
-                    const hpY3 = 100 - 90 * mult;
-                    const hpY4 = 60 - 45 * mult;
+                    const cp1Y = Math.round(165 - 55 * mult);
+                    const cp2Y = Math.round(110 - 75 * mult);
+                    const endHpY = Math.round(55 - 35 * mult);
 
-                    const tqY1 = 150 - 50 * mult;
-                    const tqY2 = 90 - 70 * mult;
-                    const tqY3 = 85 - 60 * mult;
-                    const tqY4 = 115 - 40 * mult;
+                    const tqCp1Y = Math.round(120 - 60 * mult);
+                    const tqCp2Y = Math.round(80 - 50 * mult);
+                    const endTqY = Math.round(125 - 40 * mult);
 
-                    const hpPath = `M 30,185 C 100,${hpY1} 220,${hpY2} 340,${hpY3} 460,${hpY4}`;
-                    const hpArea = `${hpPath} L 460,195 L 30,195 Z`;
+                    const hpPath = `M 30 185 C 160 ${cp1Y}, 320 ${cp2Y}, 460 ${endHpY}`;
+                    const hpArea = `${hpPath} L 460 195 L 30 195 Z`;
 
-                    const tqPath = `M 30,170 C 90,${tqY1} 200,${tqY2} 320,${tqY3} 460,${tqY4}`;
-                    const tqArea = `${tqPath} L 460,195 L 30,195 Z`;
+                    const tqPath = `M 30 170 C 140 ${tqCp1Y}, 290 ${tqCp2Y}, 460 ${endTqY}`;
+                    const tqArea = `${tqPath} L 460 195 L 30 195 Z`;
 
                     return (
                       <>
@@ -310,8 +308,8 @@ export const DynoBenchmarkSection: React.FC<DynoBenchmarkSectionProps> = ({ onBo
                         <path d={hpPath} fill="none" stroke="#ff2a54" strokeWidth="3.5" className="transition-all duration-700 ease-out" />
 
                         {/* Peak Power Indicator Dot */}
-                        <circle cx="460" cy={hpY4} r="5" fill="#ff2a54" className="animate-ping opacity-75" />
-                        <circle cx="460" cy={hpY4} r="4" fill="#ff2a54" stroke="#ffffff" strokeWidth="1.5" />
+                        <circle cx="460" cy={endHpY} r="5" fill="#ff2a54" className="animate-ping opacity-75" />
+                        <circle cx="460" cy={endHpY} r="4" fill="#ff2a54" stroke="#ffffff" strokeWidth="1.5" />
                       </>
                     );
                   })()}
