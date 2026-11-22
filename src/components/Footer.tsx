@@ -157,10 +157,34 @@ export const Footer: React.FC<FooterProps> = ({ onOpenContact }) => {
           </div>
         </div>
 
-        {/* Bottom Bar with Copyright & Back to Top */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-tech">
-          <div className="text-center sm:text-left">
-            <span>© 2026 GK Services Inc. All Rights Reserved. · Autonomous Automotive Engineering.</span>
+        {/* Bottom Bar with Creator Attribution & Back to Top */}
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono-tech">
+          <div className="text-center md:text-left space-y-1.5">
+            <div>
+              <span>© 2026 GK Services. Engineered &amp; Built by </span>
+              <a
+                href="https://gokula-kannan-m-portfolio.onrender.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[var(--accent-cyan)] hover:underline font-bold"
+              >
+                Gokula Kannan M
+              </a>
+              <span> · Flagship 3D WebGL Production.</span>
+            </div>
+            <div className="text-[11px] text-[var(--text-muted)] flex flex-wrap items-center justify-center md:justify-start gap-3">
+              <a href="https://github.com/Kannan14385" target="_blank" rel="noreferrer" className="hover:text-[var(--accent-cyan)] transition-colors">
+                GitHub: @Kannan14385 ↗
+              </a>
+              <span>·</span>
+              <a href="https://www.linkedin.com/in/gokula-kannan-m-/" target="_blank" rel="noreferrer" className="hover:text-[var(--accent-cyan)] transition-colors">
+                LinkedIn Profile ↗
+              </a>
+              <span>·</span>
+              <a href="https://gokula-kannan-m-portfolio.onrender.com/" target="_blank" rel="noreferrer" className="hover:text-[var(--accent-cyan)] transition-colors">
+                Gokula Kannan Portfolio ↗
+              </a>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">

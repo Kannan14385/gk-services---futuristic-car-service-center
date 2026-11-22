@@ -102,6 +102,18 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenCont
               GK <span className="text-[var(--accent-cyan)]">SERVICES</span>
             </span>
           </a>
+
+          {/* Creator Attribution Link to Gokula Kannan's Portfolio */}
+          <a
+            href="https://gokula-kannan-m-portfolio.onrender.com/"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden xl:inline-flex items-center gap-1.5 ml-4 px-3 py-1 rounded-full border border-[var(--accent-cyan)]/30 bg-[var(--accent-cyan)]/10 text-[11px] font-mono-tech text-[var(--accent-cyan)] hover:bg-[var(--accent-cyan)]/20 hover:border-[var(--accent-cyan)] transition-all shadow-sm"
+            title="Engineered by Gokula Kannan M — View Portfolio"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-cyan)] animate-pulse" />
+            <span>By Gokula Kannan M ↗</span>
+          </a>
         </div>
 
         {/* Division 2: Mathematically Centered Navigation Menu */}
@@ -302,7 +314,17 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenCont
                 <span>Inspect Source & Export ZIP</span>
               </button>
 
-              <div className="text-center pt-2 text-[11px] font-mono-tech text-[var(--text-muted)]">
+              <a
+                href="https://gokula-kannan-m-portfolio.onrender.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full flex items-center justify-between p-3 rounded-xl border border-[var(--accent-cyan)]/40 bg-[var(--accent-cyan)]/10 text-xs font-mono-tech text-[var(--accent-cyan)] hover:bg-[var(--accent-cyan)]/20 transition-all"
+              >
+                <span className="font-bold">ENGINEERED BY GOKULA KANNAN M</span>
+                <span>Portfolio ↗</span>
+              </a>
+
+              <div className="text-center pt-1 text-[11px] font-mono-tech text-[var(--text-muted)]">
                 <span>Emergency AI Dispatch: +1 (800) 457-CYBER · Dock #04</span>
               </div>
             </div>
