@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { Car360Viewer } from './components/Car360Viewer';
 import { ServicesSection } from './components/ServicesSection';
+import { DynoBenchmarkSection } from './components/DynoBenchmarkSection';
 import { TechBaySection } from './components/TechBaySection';
 import { CostCalculatorSection } from './components/CostCalculatorSection';
 import { TestimonialsFaqSection } from './components/TestimonialsFaqSection';
@@ -121,34 +122,44 @@ export default function App() {
 
         {/* Section Divider 3 -> 4 */}
         <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[var(--accent-cyan)]/40 to-transparent">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-mono-tech text-[var(--accent-cyan)] tracking-widest uppercase">
-            03 // ROBOTIC CLEANROOM
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-space-mono text-[var(--accent-cyan)] tracking-widest uppercase">
+            03 // QUANTUM DYNO LAB
           </div>
         </div>
 
-        {/* Section 04: Robotic Cleanroom Bays & Live Sensor Feeds */}
+        {/* Section 04: Dyno Performance Benchmark */}
+        <DynoBenchmarkSection onBookService={handleBookService} />
+
+        {/* Section Divider 4 -> 5 */}
+        <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[var(--accent-cyan)]/40 to-transparent">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-space-mono text-[var(--accent-cyan)] tracking-widest uppercase">
+            04 // ROBOTIC CLEANROOM
+          </div>
+        </div>
+
+        {/* Section 05: Robotic Cleanroom Bays & Live Sensor Feeds */}
         <div className="bg-[var(--bg-secondary)]/40">
           <TechBaySection />
         </div>
 
-        {/* Section Divider 4 -> 5 */}
-        <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[var(--accent-cyan)]/40 to-transparent">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-mono-tech text-[var(--accent-cyan)] tracking-widest uppercase">
-            04 // INSTANT ESTIMATOR
-          </div>
-        </div>
-
-        {/* Section 05: Transparent Service Terminal & Estimator */}
-        <CostCalculatorSection onOpenBookingModal={handleOpenCalculatorBooking} />
-
         {/* Section Divider 5 -> 6 */}
         <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[var(--accent-cyan)]/40 to-transparent">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-mono-tech text-[var(--accent-cyan)] tracking-widest uppercase">
-            05 // CLIENT REPORTS & FAQ
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-space-mono text-[var(--accent-cyan)] tracking-widest uppercase">
+            05 // INSTANT ESTIMATOR
           </div>
         </div>
 
-        {/* Section 06: Client Telemetry, Guarantee & FAQ */}
+        {/* Section 06: Transparent Service Terminal & Estimator */}
+        <CostCalculatorSection onOpenBookingModal={handleOpenCalculatorBooking} />
+
+        {/* Section Divider 6 -> 7 */}
+        <div className="relative h-px w-full bg-gradient-to-r from-transparent via-[var(--accent-cyan)]/40 to-transparent">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-space-mono text-[var(--accent-cyan)] tracking-widest uppercase">
+            06 // CLIENT REPORTS & FAQ
+          </div>
+        </div>
+
+        {/* Section 07: Client Telemetry, Guarantee & FAQ */}
         <div className="bg-[var(--bg-secondary)]/40">
           <TestimonialsFaqSection />
         </div>

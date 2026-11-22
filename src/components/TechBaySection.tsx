@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { Radio, Activity, Cpu, Thermometer, ShieldCheck, Play, CheckCircle, Terminal } from 'lucide-react';
 import { TECH_CHAMBERS } from '../data/mockCarData';
+import { playServoClick } from '../utils/audioSystem';
 
 export const TechBaySection: React.FC = () => {
   const [activeChamberId, setActiveChamberId] = useState<string>(TECH_CHAMBERS[0].id);
 
   const activeChamber = TECH_CHAMBERS.find((c) => c.id === activeChamberId) || TECH_CHAMBERS[0];
+
+  const handleSelectChamber = (id: string) => {
+    playServoClick();
+    setActiveChamberId(id);
+  };
 
   return (
     <section
@@ -16,12 +22,12 @@ export const TechBaySection: React.FC = () => {
         {/* Section Heading */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--accent-cyan)] text-xs font-mono-tech uppercase tracking-widest mb-3">
-              <Radio className="w-3.5 h-3.5 animate-pulse" />
-              <span>Section 04 · Autonomous Infrastructure</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--accent-cyan)] text-xs font-space-mono uppercase tracking-widest mb-3">
+              <Radio className="w-3.5 h-3.5 animate-pulse text-[var(--accent-cyan)]" />
+              <span>Section 05 // Cleanroom Robotics Stack</span>
             </div>
-            <h2 className="gk-font-h2 font-primary font-black tracking-tight text-[var(--text-primary)]">
-              ROBOTIC BAYS & <span className="text-[var(--accent-cyan)]">CLEANROOM STACK</span>
+            <h2 className="font-syncopate font-bold text-2xl sm:text-3xl lg:text-4xl tracking-wider text-[var(--text-primary)]">
+              ROBOTIC BAYS & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] to-sky-400">CLEANROOM STACK</span>
             </h2>
             <p className="mt-2 text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl font-rajdhani font-medium tracking-wide">
               Step inside our four hermetically sealed robotics chambers. Real-time air purification, infrared curing grids, and automated multi-axis LiDAR gantries execute maintenance without human contamination.
@@ -34,10 +40,10 @@ export const TechBaySection: React.FC = () => {
               <button
                 key={chamber.id}
                 id={`chamber-tab-${chamber.id}`}
-                onClick={() => setActiveChamberId(chamber.id)}
-                className={`px-3 py-2 text-xs font-mono-tech uppercase rounded-lg transition-all flex items-center gap-2 ${
+                onClick={() => handleSelectChamber(chamber.id)}
+                className={`px-3 py-2 text-xs font-space-mono uppercase rounded-lg transition-all flex items-center gap-2 ${
                   chamber.id === activeChamberId
-                    ? 'bg-[var(--accent-cyan)] text-white font-bold shadow-[0_0_15px_var(--accent-glow)]'
+                    ? 'bg-[var(--accent-cyan)] text-slate-950 font-bold shadow-[0_0_15px_var(--accent-glow)]'
                     : 'text-[var(--text-secondary)] hover:text-[var(--accent-cyan)] hover:bg-[var(--accent-cyan)]/10'
                 }`}
               >
@@ -51,7 +57,7 @@ export const TechBaySection: React.FC = () => {
         {/* Dynamic Chamber Display Box with -30px Hover Lift (Requirement 8) */}
         <div
           id="chamber-active-container"
-          className="gk-hover-lift relative rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] p-6 sm:p-10 shadow-lg"
+          className="gk-hover-lift hud-bracket relative rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] p-6 sm:p-10 shadow-lg"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Side: Chamber Telemetry & Description */}

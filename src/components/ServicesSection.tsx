@@ -39,8 +39,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onBookService 
               <Sliders className="w-3.5 h-3.5" />
               <span>Section 03 · Engineering Matrix</span>
             </div>
-            <h2 className="gk-font-h2 font-primary font-black tracking-tight text-[var(--text-primary)]">
-              CORE ENGINEERING & <span className="text-[var(--accent-cyan)]">DIAGNOSTICS</span>
+            <h2 className="gk-font-h2 font-syncopate font-black tracking-wider text-[var(--text-primary)] uppercase">
+              CORE ENGINEERING & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-crimson)]">DIAGNOSTICS</span>
             </h2>
             <p className="mt-2 text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl font-rajdhani font-medium tracking-wide">
               Every procedure executed at GK Services follows strict aerospace tolerances. Discover our 6 foundational maintenance pillars calibrated to eliminate mechanical failure.

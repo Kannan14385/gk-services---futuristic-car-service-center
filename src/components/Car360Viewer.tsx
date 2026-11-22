@@ -3,6 +3,7 @@ import { RotateCw, Play, Pause, Compass, Sparkles, Layers, Maximize2, Crosshair,
 import { SINGLE_CAR_MODELS, CAR_HOTSPOTS, STUDIO_CAR_GALLERY } from '../data/mockCarData';
 import { CarHotspot, ElevationView, GalleryCar } from '../types';
 import { Car3DCanvas } from './Car3DCanvas';
+import { soundscape } from '../utils/audioSystem';
 
 interface Car360ViewerProps {
   onSelectHotspot: (hotspot: CarHotspot) => void;
@@ -181,11 +182,11 @@ export const Car360Viewer: React.FC<Car360ViewerProps> = ({ onSelectHotspot }) =
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--accent-cyan)] text-xs font-mono-tech uppercase tracking-widest mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--accent-cyan)] text-xs font-space-mono uppercase tracking-widest mb-3">
             <Crosshair className="w-3.5 h-3.5 animate-spin text-[var(--accent-cyan)]" />
             <span>Section 02 · 3D Multi-Elevation Inspection Studio</span>
           </div>
-          <h2 className="gk-font-h2 font-primary font-black tracking-tight text-[var(--text-primary)]">
+          <h2 className="gk-font-h2 font-syncopate font-black tracking-wider text-[var(--text-primary)]">
             360° HYPER-INSPECTION <span className="text-[var(--accent-cyan)]">STUDIO</span>
           </h2>
           <p className="mt-2 text-sm sm:text-base text-[var(--text-secondary)] font-rajdhani font-medium tracking-wide">
@@ -198,10 +199,13 @@ export const Car360Viewer: React.FC<Car360ViewerProps> = ({ onSelectHotspot }) =
           {/* Option 1: 3D Interactive Studio & Customizer (Pure React + Three.js WebGL) */}
           <button
             id="engine-3d-btn"
-            onClick={() => setDisplayEngine('3d')}
-            className={`px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono-tech font-bold uppercase transition-all flex items-center gap-2.5 cursor-pointer ${
+            onClick={() => {
+              setDisplayEngine('3d');
+              soundscape.playServoClick();
+            }}
+            className={`px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-space-mono font-bold uppercase transition-all flex items-center gap-2.5 cursor-pointer ${
               displayEngine === '3d'
-                ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_30px_var(--accent-glow)] scale-105'
+                ? 'bg-[var(--accent-cyan)] text-black shadow-[0_0_30px_var(--accent-glow)] scale-105'
                 : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--accent-cyan)] hover:border-[var(--accent-cyan)]'
             }`}
           >
@@ -215,10 +219,13 @@ export const Car360Viewer: React.FC<Car360ViewerProps> = ({ onSelectHotspot }) =
           {/* Option 2: Multi-Elevation Fleet Studio (Pure React 360° Turntable) */}
           <button
             id="engine-multiaxis-btn"
-            onClick={() => setDisplayEngine('multiAxis')}
-            className={`px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-mono-tech font-bold uppercase transition-all flex items-center gap-2.5 cursor-pointer ${
+            onClick={() => {
+              setDisplayEngine('multiAxis');
+              soundscape.playServoClick();
+            }}
+            className={`px-5 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-space-mono font-bold uppercase transition-all flex items-center gap-2.5 cursor-pointer ${
               displayEngine === 'multiAxis'
-                ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_30px_var(--accent-glow)] scale-105'
+                ? 'bg-[var(--accent-cyan)] text-black shadow-[0_0_30px_var(--accent-glow)] scale-105'
                 : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:text-[var(--accent-cyan)] hover:border-[var(--accent-cyan)]'
             }`}
           >
@@ -327,6 +334,7 @@ export const Car360Viewer: React.FC<Car360ViewerProps> = ({ onSelectHotspot }) =
                 onClick={() => {
                   setElevation('over');
                   setIsAutoRotating(false);
+                  soundscape.playServoClick();
                 }}
                 className={`px-4 py-2 rounded-xl text-xs font-mono-tech font-bold uppercase transition-all flex items-center gap-2 cursor-pointer ${
                   elevation === 'over'
@@ -340,7 +348,10 @@ export const Car360Viewer: React.FC<Car360ViewerProps> = ({ onSelectHotspot }) =
 
               <button
                 id="view-orbit-btn"
-                onClick={() => setElevation('orbit')}
+                onClick={() => {
+                  setElevation('orbit');
+                  soundscape.playServoClick();
+                }}
                 className={`px-4 py-2 rounded-xl text-xs font-mono-tech font-bold uppercase transition-all flex items-center gap-2 cursor-pointer ${
                   elevation === 'orbit'
                     ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_20px_var(--accent-glow)] scale-105'
@@ -356,6 +367,7 @@ export const Car360Viewer: React.FC<Car360ViewerProps> = ({ onSelectHotspot }) =
                 onClick={() => {
                   setElevation('under');
                   setIsAutoRotating(false);
+                  soundscape.playServoClick();
                 }}
                 className={`px-4 py-2 rounded-xl text-xs font-mono-tech font-bold uppercase transition-all flex items-center gap-2 cursor-pointer ${
                   elevation === 'under'

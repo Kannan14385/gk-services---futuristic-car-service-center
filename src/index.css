@@ -2,71 +2,73 @@
 
 @layer base {
   :root {
-    /* LIGHT MODE: Primary Font Lexend */
+    /* LIGHT MODE: Liquid Platinum & Apex Cobalt */
     --font-primary: 'Lexend', system-ui, -apple-system, sans-serif;
-    --font-secondary: 'Lexend', system-ui, sans-serif;
+    --font-secondary: 'Rajdhani', system-ui, sans-serif;
     --font-body: 'Lexend', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --font-weight-primary: 500;
+    --font-mono: 'Space Mono', 'JetBrains Mono', monospace;
+    --font-weight-primary: 600;
 
-    /* Light Mode: primary #252642, secondary #8A6A4A */
-    --color-primary: #252642;
-    --color-secondary: #8A6A4A;
-    --bg-primary: #f5f6fa;
-    --bg-secondary: #eaeef6;
+    --color-primary: #0284C7;
+    --color-secondary: #E11D48;
+    --bg-primary: #f8fafc;
+    --bg-secondary: #eef2f6;
     --bg-card: #ffffff;
-    --bg-card-subtle: #f0f3f9;
-    --bg-card-overlay: rgba(255, 255, 255, 0.94);
-    --text-primary: #252642;
-    --text-secondary: #474a69;
-    --text-muted: #757999;
-    --border-color: rgba(37, 38, 66, 0.16);
-    --border-highlight: rgba(138, 106, 74, 0.65);
-    --accent-cyan: #8A6A4A;
-    --accent-cyan-light: #ab8660;
-    --accent-glow: rgba(138, 106, 74, 0.35);
-    --grid-line: rgba(37, 38, 66, 0.05);
+    --bg-card-subtle: #f1f5f9;
+    --bg-card-overlay: rgba(255, 255, 255, 0.95);
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --border-color: rgba(2, 132, 199, 0.18);
+    --border-highlight: rgba(2, 132, 199, 0.75);
+    --accent-cyan: #0284C7;
+    --accent-cyan-light: #38bdf8;
+    --accent-crimson: #e11d48;
+    --accent-amber: #d97706;
+    --accent-glow: rgba(2, 132, 199, 0.35);
+    --grid-line: rgba(2, 132, 199, 0.06);
 
     /* UI/UX Pro Max Dimensional Elevation Tokens */
-    --elevation-1: 0 1px 3px rgba(37, 38, 66, 0.08);
-    --elevation-2: 0 4px 6px rgba(37, 38, 66, 0.12);
-    --elevation-3: 0 10px 20px rgba(37, 38, 66, 0.16);
-    --elevation-4: 0 20px 40px rgba(37, 38, 66, 0.22);
-    --blur-amount: 12px;
+    --elevation-1: 0 1px 3px rgba(15, 23, 42, 0.08);
+    --elevation-2: 0 4px 6px rgba(15, 23, 42, 0.12);
+    --elevation-3: 0 10px 20px rgba(15, 23, 42, 0.16);
+    --elevation-4: 0 20px 40px rgba(15, 23, 42, 0.22);
+    --blur-amount: 14px;
   }
 
   html.dark {
-    /* DARK MODE: Primary Font Kanit - 600 */
+    /* DARK MODE: OLED Void Carbon & Electric Photonic Cyan/Crimson */
     --font-primary: 'Kanit', system-ui, -apple-system, sans-serif;
-    --font-secondary: 'Kanit', system-ui, sans-serif;
+    --font-secondary: 'Rajdhani', system-ui, sans-serif;
     --font-body: 'Kanit', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-mono: 'Space Mono', 'JetBrains Mono', monospace;
     --font-weight-primary: 600;
 
-    /* Dark Mode: primary #171719, secondary #D75151 */
-    --color-primary: #171719;
-    --color-secondary: #D75151;
-    --bg-primary: #171719;
-    --bg-secondary: #1d1d21;
-    --bg-card: #222227;
-    --bg-card-subtle: #1a1a1e;
-    --bg-card-overlay: rgba(23, 23, 25, 0.92);
-    --text-primary: #f9fafb;
-    --text-secondary: #d1d5db;
-    --text-muted: #9ca3af;
-    --border-color: rgba(215, 81, 81, 0.22);
-    --border-highlight: rgba(215, 81, 81, 0.65);
-    --accent-cyan: #D75151;
-    --accent-cyan-light: #e46868;
-    --accent-glow: rgba(215, 81, 81, 0.45);
-    --grid-line: rgba(215, 81, 81, 0.05);
+    --color-primary: #00F2FE;
+    --color-secondary: #FF2A54;
+    --bg-primary: #050608;
+    --bg-secondary: #090c12;
+    --bg-card: #0e121b;
+    --bg-card-subtle: #090c14;
+    --bg-card-overlay: rgba(8, 11, 18, 0.94);
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border-color: rgba(0, 242, 254, 0.18);
+    --border-highlight: rgba(0, 242, 254, 0.75);
+    --accent-cyan: #00F2FE;
+    --accent-cyan-light: #38f9d7;
+    --accent-crimson: #FF2A54;
+    --accent-amber: #FFB800;
+    --accent-glow: rgba(0, 242, 254, 0.5);
+    --grid-line: rgba(0, 242, 254, 0.07);
 
     /* UI/UX Pro Max Dimensional Elevation Tokens (Dark Mode) */
-    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.35);
-    --elevation-2: 0 4px 8px rgba(0, 0, 0, 0.45);
-    --elevation-3: 0 10px 24px rgba(0, 0, 0, 0.55);
-    --elevation-4: 0 20px 45px rgba(0, 0, 0, 0.7);
-    --blur-amount: 14px;
+    --elevation-1: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --elevation-2: 0 6px 12px rgba(0, 0, 0, 0.65);
+    --elevation-3: 0 12px 28px rgba(0, 0, 0, 0.75);
+    --elevation-4: 0 24px 50px rgba(0, 0, 0, 0.85);
+    --blur-amount: 16px;
   }
 
   body {
@@ -125,11 +127,52 @@
   font-family: var(--font-mono);
 }
 .font-syncopate {
-  font-family: 'Syncopate', var(--font-primary), sans-serif;
+  font-family: 'Syncopate', sans-serif;
+  letter-spacing: 0.16em;
+}
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
   letter-spacing: 0.08em;
 }
 .font-space-mono {
-  font-family: 'Space Mono', var(--font-mono), monospace;
+  font-family: 'Space Mono', 'JetBrains Mono', monospace;
+}
+
+/* Futuristic HUD & Cyber Accents */
+.glow-cyan {
+  text-shadow: 0 0 18px rgba(0, 242, 254, 0.7);
+}
+.glow-crimson {
+  text-shadow: 0 0 18px rgba(255, 42, 84, 0.7);
+}
+.glow-amber {
+  text-shadow: 0 0 18px rgba(255, 184, 0, 0.7);
+}
+
+.hud-bracket {
+  position: relative;
+}
+.hud-bracket::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid var(--accent-cyan);
+  border-left: 2px solid var(--accent-cyan);
+  pointer-events: none;
+}
+.hud-bracket::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid var(--accent-cyan);
+  border-right: 2px solid var(--accent-cyan);
+  pointer-events: none;
 }
 
 /* Universal Button Style & Universal Hover Effect (Requirement 5) */

@@ -96,12 +96,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onExplo
           {/* Left Column: Mission Content */}
           <div className="lg:col-span-6 space-y-6">
             <div className="space-y-3">
-              <span className="text-xs font-mono-tech text-[var(--accent-cyan)] uppercase tracking-widest block font-bold">
-                AEROSPACE-GRADE AUTOMOTIVE SURGERY
+              <span className="text-xs font-space-mono text-[var(--accent-cyan)] uppercase tracking-[0.2em] block font-bold flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[var(--accent-cyan)] rounded-full animate-ping" />
+                [ 01 // AEROSPACE-GRADE AUTOMOTIVE SURGERY ]
               </span>
-              <h1 className="gk-font-display font-primary font-black tracking-tight text-[var(--text-primary)] uppercase leading-none">
+              <h1 className="gk-font-display font-syncopate font-black tracking-[0.12em] text-[var(--text-primary)] uppercase leading-[1.05]">
                 NEXT-GEN <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] via-sky-400 to-blue-500 drop-shadow-[0_0_30px_var(--accent-glow)]">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] via-teal-200 to-[var(--accent-crimson)] drop-shadow-[0_0_40px_var(--accent-glow)]">
                   PRECISION
                 </span>{' '}
                 CAR SERVICE

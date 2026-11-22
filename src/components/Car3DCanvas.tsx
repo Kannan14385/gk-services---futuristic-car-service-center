@@ -5,10 +5,21 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import {
   RotateCw, Play, Pause, Compass, Layers, ZoomIn, ZoomOut, Sparkles,
   RefreshCw, Eye, ArrowUp, ArrowDown, Palette, Disc, Shield, Gauge,
-  Volume2, VolumeX, Shuffle, Zap, Sliders, ChevronRight, CheckCircle2
+  Volume2, VolumeX, Shuffle, Zap, Sliders, ChevronRight, CheckCircle2,
+  Sun, Activity, Cpu, Radio
 } from 'lucide-react';
 import { CAR_HOTSPOTS } from '../data/mockCarData';
 import { CarHotspot } from '../types';
+import { soundscape } from '../utils/audioSystem';
+
+export type StudioEnvironment = 'tokyo-cyberpunk' | 'aerospace-cleanroom' | 'sunset-dyno' | 'matrix-grid';
+
+export const STUDIO_ENVIRONMENTS: { id: StudioEnvironment; label: string; desc: string; icon: string; bgBadge: string }[] = [
+  { id: 'tokyo-cyberpunk', label: 'Tokyo Cyberpunk Night', desc: 'Wet reflective asphalt, dark void with neon cyan & magenta rim lights', icon: '🌃', bgBadge: 'from-violet-950/80 to-slate-950' },
+  { id: 'aerospace-cleanroom', label: 'Aerospace Cleanroom', desc: 'Sterile high-key white studio with overhead softbox lighting', icon: '🔬', bgBadge: 'from-slate-800 to-slate-900' },
+  { id: 'sunset-dyno', label: 'Sunset Dyno Circuit', desc: 'Warm dusk golden horizon with fiery tarmac exhaust reflections', icon: '🌅', bgBadge: 'from-amber-950/80 to-stone-950' },
+  { id: 'matrix-grid', label: 'Holographic Matrix Grid', desc: 'Dark void with animated green/cyan laser floor gridlines', icon: '🌌', bgBadge: 'from-emerald-950/80 to-black' },
+];
 
 interface Car3DCanvasProps {
   onSelectHotspot: (hotspot: CarHotspot) => void;
@@ -108,7 +119,9 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
   const [wireframeMode, setWireframeMode] = useState<boolean>(false);
   const [isRevving, setIsRevving] = useState<boolean>(false);
   const [showHotspots, setShowHotspots] = useState<boolean>(true);
-  const [activeCustomTab, setActiveCustomTab] = useState<'paint' | 'wheels' | 'aero' | 'presets'>('paint');
+  const [activeCustomTab, setActiveCustomTab] = useState<'paint' | 'wheels' | 'aero' | 'presets' | 'env'>('paint');
+  const [studioEnv, setStudioEnv] = useState<StudioEnvironment>('tokyo-cyberpunk');
+  const [xrayMode, setXrayMode] = useState<boolean>(false);
 
   // Telemetry HUD States
   const [cameraAzimuth, setCameraAzimuth] = useState<number>(45);
@@ -161,6 +174,14 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
   const animFrameIdRef = useRef<number | null>(null);
   const spinSpeedRef = useRef<number>(0);
   const audioContextRef = useRef<AudioContext | null>(null);
+
+  // Lighting & Environment Refs
+  const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
+  const mainKeyLightRef = useRef<THREE.DirectionalLight | null>(null);
+  const cyanRimLightRef = useRef<THREE.DirectionalLight | null>(null);
+  const floorMeshRef = useRef<THREE.Mesh | null>(null);
+  const ringMeshesRef = useRef<THREE.Mesh[]>([]);
+  const xrayGroupRef = useRef<THREE.Group | null>(null);
 
   // Orbit state
   const orbitState = useRef({
@@ -299,20 +320,23 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
     container.appendChild(renderer.domElement);
 
     // Lighting Rig
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
+    const ambientLight = new THREE.AmbientLight(0x1e1b4b, 0.95);
     scene.add(ambientLight);
+    ambientLightRef.current = ambientLight;
 
-    const mainKeyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    const mainKeyLight = new THREE.DirectionalLight(0x00f2fe, 2.2);
     mainKeyLight.position.set(6, 10, 6);
     mainKeyLight.castShadow = true;
     mainKeyLight.shadow.mapSize.width = 2048;
     mainKeyLight.shadow.mapSize.height = 2048;
     mainKeyLight.shadow.bias = -0.0005;
     scene.add(mainKeyLight);
+    mainKeyLightRef.current = mainKeyLight;
 
-    const cyanRimLight = new THREE.DirectionalLight(0x00f0ff, 1.5);
+    const cyanRimLight = new THREE.DirectionalLight(0xec4899, 2.4);
     cyanRimLight.position.set(-6, 5, -6);
     scene.add(cyanRimLight);
+    cyanRimLightRef.current = cyanRimLight;
 
     // Underglow ground point light
     const underGlowLight = new THREE.PointLight(0x00f0ff, 3.2, 6.5);
@@ -350,21 +374,22 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
 
     const floorGeo = new THREE.CircleGeometry(4.8, 64);
     const floorMat = new THREE.MeshStandardMaterial({
-      color: 0x0a0f1d,
-      roughness: 0.35,
-      metalness: 0.65,
+      color: 0x05070f,
+      roughness: 0.18,
+      metalness: 0.85,
     });
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.y = -0.01;
     floorMesh.receiveShadow = true;
     groundGroup.add(floorMesh);
+    floorMeshRef.current = floorMesh;
 
     // Glowing Neon Stage Perimeter Rings
     [4.7, 3.6, 2.2].forEach((radius, idx) => {
       const ringGeo = new THREE.RingGeometry(radius - 0.02, radius + 0.02, 64);
       const ringMat = new THREE.MeshBasicMaterial({
-        color: idx === 0 ? 0x00f0ff : 0x2563eb,
+        color: idx === 0 ? 0x00f0ff : 0xec4899,
         side: THREE.DoubleSide,
         transparent: true,
         opacity: idx === 0 ? 0.7 : 0.25,
@@ -391,6 +416,44 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
     carGroup.position.set(0, 0, 0);
     scene.add(carGroup);
     carGroupRef.current = carGroup;
+
+    // Internal X-Ray Powertrain Components (visible during X-Ray Mode)
+    const xrayGroup = new THREE.Group();
+    xrayGroup.visible = false;
+    carGroup.add(xrayGroup);
+    xrayGroupRef.current = xrayGroup;
+
+    // 800V Solid State Battery Pack
+    const batteryGeo = new THREE.BoxGeometry(1.3, 0.2, 2.3);
+    const batteryMat = new THREE.MeshStandardMaterial({
+      color: 0x00f2fe,
+      emissive: 0x00f2fe,
+      emissiveIntensity: 0.7,
+      roughness: 0.2,
+      metalness: 0.8,
+    });
+    const batteryMesh = new THREE.Mesh(batteryGeo, batteryMat);
+    batteryMesh.position.set(0, 0.26, 0.05);
+    xrayGroup.add(batteryMesh);
+
+    // Front Axial-Flux Electric Stator Motor
+    const frontMotorGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.55, 32);
+    const motorMat = new THREE.MeshStandardMaterial({
+      color: 0xff2a54,
+      emissive: 0xff2a54,
+      emissiveIntensity: 0.65,
+      metalness: 0.9,
+    });
+    const frontMotor = new THREE.Mesh(frontMotorGeo, motorMat);
+    frontMotor.rotation.z = Math.PI / 2;
+    frontMotor.position.set(0, 0.35, 1.35);
+    xrayGroup.add(frontMotor);
+
+    // Rear Dual-Motor Stator Unit
+    const rearMotor = new THREE.Mesh(frontMotorGeo, motorMat);
+    rearMotor.rotation.z = Math.PI / 2;
+    rearMotor.position.set(0, 0.38, -1.35);
+    xrayGroup.add(rearMotor);
 
     // Materials Library
     const paintMat = new THREE.MeshPhysicalMaterial({
@@ -1282,10 +1345,11 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
     });
   }, [headlightsOn]);
 
-  // 7. Wireframe LiDAR Toggle
+  // 7. Wireframe LiDAR Toggle with Laser Sound
   const toggleWireframe = () => {
     const next = !wireframeMode;
     setWireframeMode(next);
+    soundscape.playLaserScan();
     allMeshesRef.current.forEach((mesh) => {
       if (Array.isArray(mesh.material)) {
         mesh.material.forEach((m) => {
@@ -1297,13 +1361,119 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
     });
   };
 
-  // 8. Rev Engine and Spin Wheels Action
+  // 8. Holographic X-Ray Powertrain & Battery Scanner Mode
+  const toggleXrayMode = () => {
+    const next = !xrayMode;
+    setXrayMode(next);
+    soundscape.playLaserScan();
+
+    if (xrayGroupRef.current) {
+      xrayGroupRef.current.visible = next;
+    }
+
+    // Set paint materials to iridescent translucent glass in X-Ray mode
+    paintMaterialsRef.current.forEach((mat) => {
+      if (next) {
+        mat.transparent = true;
+        mat.opacity = 0.28;
+        mat.transmission = 0.85;
+        mat.roughness = 0.05;
+        mat.emissive = new THREE.Color(0x00f2fe);
+        mat.emissiveIntensity = 0.4;
+      } else {
+        mat.transparent = false;
+        mat.opacity = 1.0;
+        mat.transmission = 0.0;
+        mat.emissive = new THREE.Color(0x000000);
+        mat.emissiveIntensity = 0.0;
+      }
+      mat.needsUpdate = true;
+    });
+
+    if (loadedCarModelRef.current) {
+      loadedCarModelRef.current.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          const name = mesh.name.toLowerCase();
+          if (name.includes('body') || name.includes('paint') || name.includes('hood') || name.includes('door') || name.includes('roof')) {
+            if (mesh.material && 'transparent' in mesh.material) {
+              (mesh.material as THREE.Material).transparent = next;
+              (mesh.material as THREE.Material).opacity = next ? 0.25 : 1.0;
+              (mesh.material as THREE.Material).needsUpdate = true;
+            }
+          }
+        }
+      });
+    }
+  };
+
+  // 9. Dynamic Studio Environment Lighting Switcher
+  const applyStudioEnvironment = (env: StudioEnvironment) => {
+    setStudioEnv(env);
+    soundscape.playServoClick();
+
+    const ambient = ambientLightRef.current;
+    const key = mainKeyLightRef.current;
+    const rim = cyanRimLightRef.current;
+    const floor = floorMeshRef.current;
+
+    if (env === 'tokyo-cyberpunk') {
+      ambient?.color.set(0x1e1b4b);
+      if (ambient) ambient.intensity = 0.85;
+      key?.color.set(0x00f2fe);
+      if (key) key.intensity = 2.4;
+      rim?.color.set(0xec4899);
+      if (rim) rim.intensity = 2.8;
+      if (floor) {
+        (floor.material as THREE.MeshStandardMaterial).color.set(0x05070f);
+        (floor.material as THREE.MeshStandardMaterial).roughness = 0.15;
+        (floor.material as THREE.MeshStandardMaterial).metalness = 0.9;
+      }
+    } else if (env === 'aerospace-cleanroom') {
+      ambient?.color.set(0xffffff);
+      if (ambient) ambient.intensity = 1.8;
+      key?.color.set(0xffffff);
+      if (key) key.intensity = 3.0;
+      rim?.color.set(0x38bdf8);
+      if (rim) rim.intensity = 1.2;
+      if (floor) {
+        (floor.material as THREE.MeshStandardMaterial).color.set(0x1e293b);
+        (floor.material as THREE.MeshStandardMaterial).roughness = 0.25;
+        (floor.material as THREE.MeshStandardMaterial).metalness = 0.5;
+      }
+    } else if (env === 'sunset-dyno') {
+      ambient?.color.set(0x7c2d12);
+      if (ambient) ambient.intensity = 0.85;
+      key?.color.set(0xf59e0b);
+      if (key) key.intensity = 2.8;
+      rim?.color.set(0xff2a54);
+      if (rim) rim.intensity = 2.2;
+      if (floor) {
+        (floor.material as THREE.MeshStandardMaterial).color.set(0x18181b);
+        (floor.material as THREE.MeshStandardMaterial).roughness = 0.5;
+        (floor.material as THREE.MeshStandardMaterial).metalness = 0.3;
+      }
+    } else if (env === 'matrix-grid') {
+      ambient?.color.set(0x022c22);
+      if (ambient) ambient.intensity = 0.5;
+      key?.color.set(0x10b981);
+      if (key) key.intensity = 2.2;
+      rim?.color.set(0x00f2fe);
+      if (rim) rim.intensity = 2.0;
+      if (floor) {
+        (floor.material as THREE.MeshStandardMaterial).color.set(0x020617);
+        (floor.material as THREE.MeshStandardMaterial).roughness = 0.1;
+        (floor.material as THREE.MeshStandardMaterial).metalness = 0.95;
+      }
+    }
+  };
+
+  // 10. Rev Engine and Spin Wheels Action with Web Audio API
   const handleRevTrigger = () => {
-    playRevSound();
     setIsRevving(true);
-    setTimeout(() => {
+    soundscape.playEngineRev(() => {
       setIsRevving(false);
-    }, 1200);
+    });
   };
 
   // 9. Randomize Custom Build (Surprise Me)
@@ -1391,6 +1561,21 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
           >
             <Layers className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">LiDAR</span>
+          </button>
+
+          {/* Holographic X-Ray Powertrain Mode */}
+          <button
+            id="toggle-3d-xray-btn"
+            onClick={toggleXrayMode}
+            className={`px-3 py-1.5 rounded-xl border text-xs font-mono-tech transition-all flex items-center gap-1.5 cursor-pointer backdrop-blur-md ${
+              xrayMode
+                ? 'bg-rose-500 text-white border-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.6)] font-bold'
+                : 'bg-[var(--bg-card)]/90 text-[var(--text-secondary)] border-[var(--border-color)] hover:text-rose-400'
+            }`}
+            title="Toggle Holographic X-Ray Powertrain & Battery View"
+          >
+            <Activity className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">X-Ray</span>
           </button>
 
           {/* Auto Orbit Toggle */}
@@ -1549,7 +1734,10 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
             </button>
 
             <button
-              onClick={() => setActiveCustomTab('presets')}
+              onClick={() => {
+                setActiveCustomTab('presets');
+                soundscape.playServoClick();
+              }}
               className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all flex items-center gap-2 cursor-pointer ${
                 activeCustomTab === 'presets'
                   ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_15px_var(--accent-glow)]'
@@ -1559,11 +1747,29 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
               <Eye className="w-4 h-4" />
               <span>Camera Angles</span>
             </button>
+
+            <button
+              onClick={() => {
+                setActiveCustomTab('env');
+                soundscape.playServoClick();
+              }}
+              className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all flex items-center gap-2 cursor-pointer ${
+                activeCustomTab === 'env'
+                  ? 'bg-[var(--accent-cyan)] text-white shadow-[0_0_15px_var(--accent-glow)]'
+                  : 'bg-[var(--bg-card-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              <Sun className="w-4 h-4" />
+              <span>Lighting Studio</span>
+            </button>
           </div>
 
           {/* Hotspot Toggle */}
           <button
-            onClick={() => setShowHotspots(!showHotspots)}
+            onClick={() => {
+              setShowHotspots(!showHotspots);
+              soundscape.playServoClick();
+            }}
             className={`px-3 py-1.5 rounded-xl border text-xs font-mono-tech transition-all flex items-center gap-1.5 cursor-pointer ${
               showHotspots
                 ? 'bg-[var(--bg-card-subtle)] text-[var(--accent-cyan)] border-[var(--accent-cyan)]/40'
@@ -1868,6 +2074,42 @@ export const Car3DCanvas: React.FC<Car3DCanvasProps> = ({ onSelectHotspot }) => 
                 <ArrowDown className="w-3.5 h-3.5" />
                 <span>Under Chassis Undercarriage</span>
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Dynamic Atmospheric Studio Environments */}
+        {activeCustomTab === 'env' && (
+          <div className="space-y-3 animate-fadeIn">
+            <span className="text-xs font-mono-tech uppercase text-[var(--text-muted)] tracking-wider block">
+              ATMOSPHERIC LIGHTING & ENVIRONMENT WORLDS:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {STUDIO_ENVIRONMENTS.map((env) => {
+                const isSelected = studioEnv === env.id;
+                return (
+                  <button
+                    key={env.id}
+                    onClick={() => applyStudioEnvironment(env.id)}
+                    className={`p-3 rounded-2xl border text-left transition-all cursor-pointer bg-gradient-to-br ${env.bgBadge} ${
+                      isSelected
+                        ? 'border-[var(--accent-cyan)] shadow-[0_0_20px_var(--accent-glow)] scale-[1.02]'
+                        : 'border-[var(--border-color)] hover:border-[var(--accent-cyan)]/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xl">{env.icon}</span>
+                      {isSelected && <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] shadow-[0_0_8px_var(--accent-cyan)]" />}
+                    </div>
+                    <div className="font-primary font-bold text-xs text-[var(--text-primary)]">
+                      {env.label}
+                    </div>
+                    <span className="text-[10px] font-mono-tech text-[var(--text-secondary)] block mt-1 leading-tight">
+                      {env.desc}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Menu, X, Shield, Radio, Sparkles, Code2, Download, Sun, Moon, ArrowRight, Activity } from 'lucide-react';
+import { Menu, X, Shield, Radio, Sparkles, Code2, Download, Sun, Moon, ArrowRight, Activity, Volume2, VolumeX } from 'lucide-react';
+import { soundscape } from '../utils/audioSystem';
 
 interface HeaderProps {
   theme: 'dark' | 'light';
@@ -13,6 +14,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenCont
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const [hangarAudioOn, setHangarAudioOn] = useState(false);
 
   // Prevent background scrolling when offcanvas menu is open
   useEffect(() => {
@@ -30,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenCont
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      const sections = ['hero', 'inspection360', 'services', 'technology', 'calculator', 'reviews'];
+      const sections = ['hero', 'inspection360', 'services', 'dyno-lab', 'technology', 'calculator', 'reviews'];
       const scrollPos = window.scrollY + 200;
 
       for (const section of sections) {
@@ -50,21 +52,31 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenCont
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Concise, spacious navigation headings to eliminate congestion
+  // Concise, spacious navigation headings with new Dyno Lab
   const navLinks = [
     { label: 'Overview', href: '#hero', id: 'hero', index: '01', desc: 'Mission & Facility' },
-    { label: '3D Inspection', href: '#inspection360', id: 'inspection360', index: '02', desc: 'Sports Car & WebGL' },
+    { label: '3D Studio', href: '#inspection360', id: 'inspection360', index: '02', desc: 'Sports Car & WebGL' },
     { label: 'Services', href: '#services', id: 'services', index: '03', desc: 'Calibration & Ceramic' },
-    { label: 'Technology', href: '#technology', id: 'technology', index: '04', desc: 'Robotic Docks' },
-    { label: 'Estimator', href: '#calculator', id: 'calculator', index: '05', desc: 'Instant Live Pricing' },
-    { label: 'Reviews', href: '#reviews', id: 'reviews', index: '06', desc: 'Customer Telemetry' },
+    { label: 'Dyno Lab', href: '#dyno-lab', id: 'dyno-lab', index: '04', desc: 'Quantum Dyno Stage 3' },
+    { label: 'Robotic Docks', href: '#technology', id: 'technology', index: '05', desc: 'Cleanroom Sensor Feeds' },
+    { label: 'Estimator', href: '#calculator', id: 'calculator', index: '06', desc: 'Instant Live Pricing' },
+    { label: 'Reviews', href: '#reviews', id: 'reviews', index: '07', desc: 'Customer Telemetry' },
   ];
 
   const handleNavClick = (href: string) => {
+    soundscape.playServoClick();
     setMobileMenuOpen(false);
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleToggleHangarAudio = () => {
+    const running = soundscape.toggleHangarDrone();
+    setHangarAudioOn(running);
+    if (!running) {
+      soundscape.playServoClick();
     }
   };
 
@@ -146,6 +158,26 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenCont
 
         {/* Division 3: Actions + Mobile/Tablet Hamburger Toggle */}
         <div id="header-contact-division" className="flex items-center gap-2 sm:gap-3">
+          {/* Ambient Hangar Audio Soundscape Toggle */}
+          <button
+            id="header-audio-toggle"
+            onClick={handleToggleHangarAudio}
+            className={`hidden sm:flex p-2 sm:px-3 sm:py-2 rounded-xl border text-xs font-space-mono uppercase items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              hangarAudioOn
+                ? 'bg-[var(--accent-cyan)] text-black border-[var(--accent-cyan)] shadow-[0_0_15px_var(--accent-glow)] font-bold'
+                : 'bg-[var(--bg-card)] border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-cyan)]'
+            }`}
+            aria-label="Toggle Sci-Fi Hangar Audio Drone"
+            title={hangarAudioOn ? 'Hangar Ambient Sound: ON' : 'Toggle Hangar Ambient Sound'}
+          >
+            {hangarAudioOn ? (
+              <Volume2 className="w-4 h-4 text-black animate-pulse" />
+            ) : (
+              <VolumeX className="w-4 h-4 text-[var(--text-muted)]" />
+            )}
+            <span className="hidden xl:inline">{hangarAudioOn ? 'Audio: ON' : 'Audio: OFF'}</span>
+          </button>
+
           {/* Light / Dark Mode Switcher (Desktop only; on mobile it resides in the offcanvas menu) */}
           <button
             id="header-theme-toggle"
